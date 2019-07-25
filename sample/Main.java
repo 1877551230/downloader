@@ -9,9 +9,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 
 
@@ -26,14 +24,17 @@ import java.io.*;
 import java.net.Socket;
 
 public class Main extends Application {
+    Thread t;
      TextField textField = new TextField();
+     Label label = new Label("壁纸路径:C:/Users/PC/Desktop/Wallpaper/1.jpg");
      Button button = new Button("下载");
      Text text1 = new Text();
      Text text2 = new Text();
      ProgressBar pb = new ProgressBar(0);
+     ProgressIndicator progressIndicator = new ProgressIndicator(0);
     GridPane gridPane = new GridPane();
     static String filePath;
-    Socket socket = new Socket("127.0.0.1",9992);
+    Socket socket = new Socket("10.8.38.136",9992);
     DataInputStream dis = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
     DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
 
@@ -54,17 +55,18 @@ public class Main extends Application {
         primaryStage.show();
         Text text = new Text("请输入文件路径");
         text.setFont(Font.font("Tahoma", FontWeight.NORMAL,20));
-        gridPane.add(text,0,0,2,1);
-        gridPane.add(text2,1,7);
-        gridPane.add(textField,0,1);
-gridPane.add(pb,0,8);
+        gridPane.add(text,4,0,2,1);
+        gridPane.add(text2,4,7);
+        gridPane.add(textField,4,1);
+        gridPane.add(label,4,9);
 
-        gridPane.add(text1,1,6);
-        gridPane.add(button,0,2);
+
+        gridPane.add(text1,4,6);
+        gridPane.add(button,4,3);
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-               new Thread(new Runnable() {
+               t =  new Thread(new Runnable() {
                     @Override
                     public void run() {
                         try {
@@ -74,7 +76,8 @@ gridPane.add(pb,0,8);
                             e.printStackTrace();
                         }
                    }
-                }).start();
+                });
+              t.start();
 
 
             }
@@ -86,12 +89,15 @@ public void send() throws IOException {
         dos.writeUTF(filePath);
         dos.flush();
         if (dis.readBoolean()) {
-
+            text1.setFill(Color.GREEN);
             text1.setText("开始下载");
+            gridPane.add(pb,4,8);
+            gridPane.add(progressIndicator,5,8);
             download();
-        } else {
+        } else { 
             text1.setFill(Color.RED);
             text1.setText("文件不存在,重新输入");
+            t.stop();
         }
 
 }
@@ -113,12 +119,12 @@ public void download() throws IOException {
                     //从网络流上接收文件数据,并存储到内存,把内存数据输出到本地硬盘
                     //System.out.println("开始接收文件...");
                     //构建本地流输出
-                    DataOutputStream dos_local = new DataOutputStream(new BufferedOutputStream(new FileOutputStream("D:/ab/"+fileName)));
+                    DataOutputStream dos_local = new DataOutputStream(new BufferedOutputStream(new FileOutputStream("C:/Users/PC/Desktop"+fileName)));
                     //构建缓冲
 
                     byte[] buffer = new byte[1024*4];//服务端和客户端缓冲大小一样
                     //循环从网络流中读入数据进内存
-                    int progress=0;
+                    long progress=0;
                     while(true){
 
                         int len = -1;
@@ -133,8 +139,10 @@ public void download() throws IOException {
 
                         dos_local.write(buffer,0,len);
                         progress += buffer.length;
-                        System.out.println(progress/d);
-                        pb.setProgress(progress/d);
+                        double dd = progress/d;
+                        //System.out.println(progress/d);
+                        pb.setProgress(dd);
+                        progressIndicator.setProgress(dd);
                     }
                     dos_local.close();
                     dis.close();

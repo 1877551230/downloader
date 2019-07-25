@@ -21,10 +21,14 @@ public class Server {
         while (true) {
             Socket socket = ss.accept();
             //仅代表run逻辑
+
             ThreadHandler th = new ThreadHandler(socket);
-            Thread t = new Thread(th);
-            t.start();
+
+             new Thread(th).start();
+
+        }
         }
 
-    }
+
+
 }
