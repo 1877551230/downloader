@@ -13,18 +13,22 @@ import java.net.Socket;
  * 一次只能给一个客户端提供服务
  */
 public class Server {
-    public static void main(String[] args) throws Exception {
 
+    public static void main(String[] args) throws Exception {
+        int i = 0;
+        int j = 0;
         //创建了一个ServerSocket对象
         ServerSocket ss = new ServerSocket(9992);
         System.out.println("服务器已经启动");
         while (true) {
             Socket socket = ss.accept();
             //仅代表run逻辑
+            //System.out.println((++i)+"个下载线程");
 
-            ThreadHandler th = new ThreadHandler(socket);
+             //new Thread(new ServerDownloadAction(socket)).start();
 
-             new Thread(th).start();
+            System.out.println((++j)+"个上传线程");
+             new Thread(new ServerUploadAction(socket)).start();
 
         }
         }
