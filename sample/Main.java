@@ -70,7 +70,7 @@ public class Main extends Application {
 
                             new Thread(new ClientDownloadAction(filePath)).start();
 
-                        } catch (IOException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
 

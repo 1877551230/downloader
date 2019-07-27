@@ -1,5 +1,9 @@
 package sample;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -9,10 +13,11 @@ import java.net.Socket;
  * 2.获取文件的名称和文件的长度,并写到网络上
  * 3.从本服务器硬盘读取文件内容到内存
  * 4.把内存的文件数据写到网络上
- *
+ * <p>
  * 一次只能给一个客户端提供服务
  */
 public class Server {
+
 
     public static void main(String[] args) throws Exception {
         int i = 0;
@@ -22,17 +27,22 @@ public class Server {
         System.out.println("服务器已经启动");
         while (true) {
             Socket socket = ss.accept();
-            //仅代表run逻辑
-            //System.out.println((++i)+"个下载线程");
+            DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));//网络输入流
+            DataInputStream dis = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+            char c = dis.readChar();
+            if (c == 'D') {
+                System.out.println((++i) + "个下载线程");
 
-             //new Thread(new ServerDownloadAction(socket)).start();
+                new Thread(new ServerDownloadAction(socket,dis,dos)).start();
+            }
+            if (c == 'U') {
+                System.out.println((++j) + "个上传线程");
+                new Thread(new ServerUploadAction(socket,dis,dos)).start();
+            }
 
-            System.out.println((++j)+"个上传线程");
-             new Thread(new ServerUploadAction(socket)).start();
 
         }
-        }
-
+    }
 
 
 }

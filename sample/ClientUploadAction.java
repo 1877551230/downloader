@@ -5,10 +5,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 
 public class ClientUploadAction implements Runnable {
-    Socket socket = new Socket("10.8.38.136",9992);
-    DataInputStream dis = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
-    DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
-    InetAddress ip = socket.getInetAddress();//获取客户端的ip地址
+
     String filePath;
     public ClientUploadAction(String filePath) throws IOException {
 
@@ -18,7 +15,10 @@ public class ClientUploadAction implements Runnable {
     public void run() {
         try {
 
-
+            Socket socket = new Socket("10.8.38.136",9992);
+            DataInputStream dis = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+            DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+            InetAddress ip = socket.getInetAddress();//获取客户端的ip地址
             File file = new File(filePath);
 
                 if (!file.exists()) {
@@ -31,6 +31,7 @@ public class ClientUploadAction implements Runnable {
             //能到此处说明文件存在
             //获取文件的名称
             String fileName = file.getName();
+            dos.writeChar('U');
             dos.writeUTF(fileName);
             dos.flush();
             //获取文件的长度
@@ -51,6 +52,7 @@ public class ClientUploadAction implements Runnable {
 
                     dos.close();
                     dis.close();
+                    socket.close();
                 }
 
         } catch (IOException e) {

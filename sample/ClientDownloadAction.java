@@ -5,6 +5,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 
 import java.io.*;
+import java.net.ConnectException;
 import java.net.Socket;
 
 /**
@@ -13,20 +14,21 @@ import java.net.Socket;
 
 public class ClientDownloadAction implements Runnable {
 
-    Socket socket = new Socket("10.8.38.136",9992);
-    DataInputStream dis = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
-    DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
     String filePath;
-    public ClientDownloadAction(String filePath) throws IOException {
+    public ClientDownloadAction(String filePath)  {
         this.filePath=filePath;
     }
 
     @Override
     public void run() {
         try {
+            Socket socket = new Socket("10.8.38.136",9992);
+            DataInputStream dis = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+            DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+
            // GridPane gridPane = new GridPane();
 
-
+            dos.writeChar('D');
             dos.writeUTF(filePath);
             dos.flush();
             if (dis.readBoolean()) {
@@ -71,6 +73,7 @@ public class ClientDownloadAction implements Runnable {
                         while ((len=dis.read(buffer))!=-1) {
 
                             dos_local.write(buffer, 0, len);
+
                            // progress += buffer.length;
                            // double dd = progress / d;
                             //System.out.println(progress/d);
@@ -91,8 +94,11 @@ public class ClientDownloadAction implements Runnable {
             } else {
                // text1.setFill(Color.RED);
                // text1.setText("文件不存在,重新输入");
-
+                System.out.println("没这个文件");
+                Thread.currentThread().stop();
             }
+        } catch (ConnectException e1){
+            e1.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

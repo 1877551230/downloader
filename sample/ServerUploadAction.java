@@ -7,10 +7,13 @@ import java.net.InetAddress;
 import java.net.Socket;
 
 public class ServerUploadAction implements Runnable{
-
+    DataInputStream dis ; //网络输出流
+    DataOutputStream dos ;//网络输入流
     public  Socket socket;
-    public ServerUploadAction(Socket socket) {
+    public ServerUploadAction(Socket socket,DataInputStream dis,DataOutputStream dos) {
         this.socket = socket;
+        this.dis = dis;
+        this.dos = dos;
     }
 
 
@@ -18,8 +21,7 @@ public class ServerUploadAction implements Runnable{
     public void run() {
 
         try {
-            DataInputStream dis = new DataInputStream(new BufferedInputStream(socket.getInputStream())); //网络输出流
-            DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));//网络输入流
+
             InetAddress ip = socket.getInetAddress();//获取客户端的ip地址
             //filePath = textField.getText();
             //dos.writeUTF(filePath);

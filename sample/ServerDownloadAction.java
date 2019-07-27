@@ -13,21 +13,23 @@ import java.net.Socket;
     public class ServerDownloadAction implements Runnable {
 
     public  Socket socket;
-
-    public ServerDownloadAction(Socket socket) throws IOException {
+    DataInputStream dis; //网络输出流
+    DataOutputStream dos;//网络输入流
+    public ServerDownloadAction(Socket socket,DataInputStream dis,DataOutputStream dos) throws IOException {
         this.socket = socket;
+        this.dis = dis;
+        this.dos = dos;
     }
 
     @Override
     public void run() {
         try {
-            DataInputStream dis = new DataInputStream(new BufferedInputStream(socket.getInputStream())); //网络输出流
-            DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));//网络输入流
+
             InetAddress ip = socket.getInetAddress();//获取客户端的ip地址
-            System.out.println(Thread.currentThread().getName()+"开始下载");
+            System.out.println(Thread.currentThread().getName()+"开始请求下载");
             String filePath = dis.readUTF();
             File file = new File(filePath);
-            while (true) {
+
                 if (!file.exists()) {
                     dos.writeBoolean(false);//如果不存在则写出false
                     System.out.println("没这个文件");
@@ -37,9 +39,8 @@ import java.net.Socket;
                 } else {
                     dos.writeBoolean(true);
                     dos.flush();
-                    break;
                 }
-            }
+
 
             //能到此处说明文件存在
             //获取文件的名称
