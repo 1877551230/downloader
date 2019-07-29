@@ -1,9 +1,14 @@
 package sample;
 
+import javafx.application.Platform;
+import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.lang.reflect.Field;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -20,8 +25,6 @@ public class Server {
 
 
     public static void main(String[] args) throws Exception {
-        int i = 0;
-        int j = 0;
         //创建了一个ServerSocket对象
         ServerSocket ss = new ServerSocket(9992);
         System.out.println("服务器已经启动");
@@ -31,13 +34,14 @@ public class Server {
             DataInputStream dis = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
             char c = dis.readChar();
             if (c == 'D') {
-                System.out.println((++i) + "个下载线程");
 
-                new Thread(new ServerDownloadAction(socket,dis,dos)).start();
+
+                new Thread(new ServerDownloadAction(socket, dis, dos)).start();
+
             }
             if (c == 'U') {
-                System.out.println((++j) + "个上传线程");
-                new Thread(new ServerUploadAction(socket,dis,dos)).start();
+
+                new Thread(new ServerUploadAction(socket, dis, dos)).start();
             }
 
 
