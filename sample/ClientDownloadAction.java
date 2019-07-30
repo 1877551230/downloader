@@ -70,9 +70,11 @@ public class ClientDownloadAction implements Runnable {
                 byte[] buffer = new byte[1024 * 4];//服务端和客户端缓冲大小一样
                 //从网络流上接收文件数据,并存储到内存,把内存数据输出到本地硬盘
                 //构建本地流输出
-                DataOutputStream dos_local = new DataOutputStream(new BufferedOutputStream(new FileOutputStream("C:\\Users\\PC\\Desktop\\" + fileName)));
-
-
+                File file = new File("C:\\Users\\PC\\Desktop\\downloader");
+                if(!file.exists()){
+                	file.mkdir();
+                }
+                DataOutputStream dos_local = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(file+"/" + fileName)));
 //循环从网络流中读入数据进内存
                         long progress = 0;
                         int len = -1;

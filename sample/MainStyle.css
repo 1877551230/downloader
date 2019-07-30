@@ -36,3 +36,15 @@
     -fx-fill: #818181;
     -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );
 }
+.text-area{
+    -fx-background-insets: 0;
+    -fx-background-color: transparent, white, transparent, white;
+}
+
+.textArea .content {
+    -fx-background-color: transparent, white, transparent, white;
+}
+
+.textArea:focused {
+    -fx-background-color: transparent, white, transparent, white;
+}
