@@ -113,9 +113,9 @@ public class Main extends Application {
                 window.setMinHeight(150);
                 Label labe2 = new Label("所有文件将保存在桌面名字为downloader的文件夹");
                 Label label = new Label("壁纸文件夹--C:\\Users\\PC\\Desktop\\wallpaper");
-                Label label1 = new Label("壁纸全部以数字命名如1.jpg");
+                TextField label1 = new TextField("壁纸全部以数字命名如C:\\Users\\PC\\Desktop\\wallpaper\\1.jpg");
                 Label label2 = new Label("音乐文件夹--C:\\Users\\PC\\Desktop\\wallpaper");
-                Label label3 = new Label("音乐压缩包名字:音乐.7z");
+                TextField label3 = new TextField("音乐压缩包名字:C:\\Users\\PC\\Desktop\\wallpaper\\音乐.7z");
                 Label label4 = new Label("作为回报,请共享您的壁纸,以您的用户名-壁纸名命名");
                 VBox box = new VBox(10);
                 box.getChildren().addAll(labe2,label,label1,label3,label4);
