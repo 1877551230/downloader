@@ -20,27 +20,22 @@ public class ServerDownloadAction implements Runnable {
         this.dis = dis;
         this.dos = dos;
     }
-
     @Override
     public void run() {
         try {
-
             InetAddress ip = socket.getInetAddress();//获取客户端的ip地址
             System.out.println(Thread.currentThread().getName() + "开始请求下载");
             String filePath = dis.readUTF();
             File file = new File(filePath);
-
             if (!file.exists()) {
                 dos.writeBoolean(false);//如果不存在则写出false
                 System.out.println("没这个文件");
                 dos.flush(); //清除缓冲,标记数据写出完毕,此时才将数据发送到网络上
-                Thread.currentThread().stop();
+                Thread.currentThread().interrupt();
 
             } else {
                 dos.writeBoolean(true);
                 dos.flush();
-            }
-
 
             //能到此处说明文件存在
             //获取文件的名称
@@ -61,20 +56,15 @@ public class ServerDownloadAction implements Runnable {
             while ((len = dis_local.read(buffer)) != -1) {
                 //本地流输入
                 dos.write(buffer, 0, len);
-
             }
             dos.flush();
-
-
             dos.close();
             dis.close();
             socket.close();
             System.out.println(ip.getHostAddress() + "  文件:" + fileName + "发送完毕");
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
-
-
 }

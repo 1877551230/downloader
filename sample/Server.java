@@ -1,14 +1,9 @@
 package sample;
 
-import javafx.application.Platform;
-import javafx.scene.layout.GridPane;
-import javafx.scene.text.Text;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.lang.reflect.Field;
 import java.net.ServerSocket;
 import java.net.Socket;
 
